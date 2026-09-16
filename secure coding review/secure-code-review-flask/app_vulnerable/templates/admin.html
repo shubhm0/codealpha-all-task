@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel - TeamNotes{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2>System Administration Dashboard</h2>
+    <!-- # VULN-03: Missing Authorization Notice -->
+    <!-- This panel displays sensitive user accounts and database notes to ANY authenticated user! -->
+    <p style="color: var(--text-muted);">
+        System management portal for user account auditing and database management.
+    </p>
+</div>
+
+<div class="card" style="margin-bottom: 2rem;">
+    <h3>Registered User Accounts</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 0.5rem;">ID</th>
+                <th style="padding: 0.5rem;">Username</th>
+                <th style="padding: 0.5rem;">Role</th>
+                <th style="padding: 0.5rem;">Bio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in all_users %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.5rem;">{{ u.id }}</td>
+                    <td style="padding: 0.5rem;"><strong>{{ u.username }}</strong></td>
+                    <td style="padding: 0.5rem;"><span style="background: #334155; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;">{{ u.role }}</span></td>
+                    <td style="padding: 0.5rem; color: var(--text-muted);">{{ u.bio[:50] if u.bio else 'No bio' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>All System Notes Overview</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 0.5rem;">Note ID</th>
+                <th style="padding: 0.5rem;">Author</th>
+                <th style="padding: 0.5rem;">Title</th>
+                <th style="padding: 0.5rem;">Attachment</th>
+                <th style="padding: 0.5rem;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in all_notes %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.5rem;">{{ n.id }}</td>
+                    <td style="padding: 0.5rem;">{{ n.username }}</td>
+                    <td style="padding: 0.5rem;">{{ n.title }}</td>
+                    <td style="padding: 0.5rem;">{{ n.attachment if n.attachment else 'None' }}</td>
+                    <td style="padding: 0.5rem;">
+                        <a href="{{ url_for('view_note', note_id=n.id) }}" style="color: var(--primary);">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

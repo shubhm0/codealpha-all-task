@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - TeamNotes{% endblock %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 3rem auto;">
+    <div class="card">
+        <h2>Create an Account</h2>
+        <!-- # VULN-12: Missing CSRF token in state-changing POST form -->
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Choose a password">
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio / About You</label>
+                <textarea id="bio" name="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+            </div>
+            <button type="submit" style="width: 100%;">Register</button>
+        </form>
+        <p style="margin-top: 1rem; text-align: center; color: var(--text-muted);">
+            Already have an account? <a href="{{ url_for('login') }}" style="color: var(--primary);">Login here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

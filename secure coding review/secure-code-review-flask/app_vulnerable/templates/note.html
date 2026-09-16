@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ note.title }} - TeamNotes{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1rem;">
+    <a href="{{ url_for('dashboard') }}" style="color: var(--text-muted); text-decoration: none;">&larr; Back to Dashboard</a>
+</div>
+
+<div class="card">
+    <!-- # VULN-02: IDOR Note View -->
+    <!-- Accessible to any user who changes the note ID in the URL bar -->
+    <h2>{{ note.title }}</h2>
+    <div style="color: var(--text-muted); font-size: 0.9rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+        Author: <strong>{{ note.username }}</strong> | Author User ID: {{ note.user_id }} | Created: {{ note.created_at }}
+    </div>
+    
+    <div style="white-space: pre-wrap; margin-bottom: 1.5rem; font-size: 1.05rem;">
+        {{ note.content }}
+    </div>
+
+    {% if note.attachment %}
+        <div style="background: #0f172a; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+            <strong>Attachment:</strong> {{ note.attachment }}
+            <br>
+            <!-- # VULN-08: Path traversal link -->
+            <a href="{{ url_for('download_file', file=note.attachment) }}" class="btn" style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                Download File
+            </a>
+        </div>
+    {% endif %}
+
+    <div style="display: flex; gap: 10px;">
+        <!-- # VULN-02 & # VULN-12: IDOR + No CSRF Token -->
+        <form method="POST" action="{{ url_for('delete_note', note_id=note.id) }}">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this note?')">
+                Delete Note
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

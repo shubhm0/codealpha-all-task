@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Note - TeamNotes{% endblock %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 2rem auto;">
+    <div class="card">
+        <h2>Create New Team Note</h2>
+        
+        <!-- # VULN-12: Missing CSRF token in state-changing POST form -->
+        <!-- # VULN-09: Unrestricted file upload form accepts any file type -->
+        <form method="POST" action="{{ url_for('new_note') }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Note Title</label>
+                <input type="text" id="title" name="title" required placeholder="Enter a descriptive title">
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Note Content</label>
+                <textarea id="content" name="content" rows="6" required placeholder="Write your team note here..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="attachment">Attach File (Optional)</label>
+                <!-- # VULN-09: No accept restrictions or MIME filtering -->
+                <input type="file" id="attachment" name="attachment">
+                <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                    Upload any document or resource attachment for your team members.
+                </small>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit">Save Note</button>
+                <a href="{{ url_for('dashboard') }}" class="btn" style="background-color: var(--border-color);">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
